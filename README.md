@@ -1,7 +1,7 @@
 # bloom
 
 Styles for terminal text — colours and effects — and the ANSI escape sequences
-that turn them on and off, for [Meadow](https://github.com/mcdearman/meadow).
+that turn them on and off, for [Meadow](https://github.com/meadow-lang/meadow).
 
 This package is a port of Rust's [`anstyle`](https://github.com/rust-cli/anstyle)
 1.0.14 and writes exactly the same sequences. Like the crate, it does not
@@ -10,7 +10,7 @@ decide whether a terminal can show colour. It only builds the sequences.
 ## Install
 
 ```sh
-meadow add mcdearman/Bloom
+meadow add meadow-lang/Bloom
 ```
 
 ## Use
