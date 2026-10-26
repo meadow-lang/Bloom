@@ -25,8 +25,9 @@ use Bloom.Style
 
 @cfg(test)
 fun num i n =
-  let rec go k acc = if k >= n then acc else go (k + 1) (acc * 64 + (toInt (stringByteAt cases (i + k)) - 48)) in
-  (go 0 0, i + n)
+  let rec go k acc =
+    if k >= n then acc else go (k + 1) (acc * 64 + (toInt (stringByteAt cases (i + k)) - 48))
+  in (go 0 0, i + n)
 
 @cfg(test)
 fun str i =
@@ -37,13 +38,7 @@ fun str i =
 fun ansiAt i = V.getOr Black allAnsi i
 
 @cfg(test)
-def allAnsi =
-  V.map
-    (\i ->
-      match ansiFromIndex i with
-      | Just a -> a
-      | None -> Black)
-    (V.range 0 16)
+def allAnsi = V.map (\i -> match ansiFromIndex i with | Just a -> a | None -> Black) (V.range 0 16)
 
 -- A colour, perhaps, and where it ends.
 @cfg(test)
@@ -54,9 +49,7 @@ fun readColor i =
   | 1 ->
       let a = num (snd kind) 1 in
       (Just (Ansi (ansiAt (fst a))), snd a)
-  | 2 ->
-      let n = num (snd kind) 2 in
-      (Just (Ansi256 (fst n)), snd n)
+  | 2 -> let n = num (snd kind) 2 in (Just (Ansi256 (fst n)), snd n)
   | _ ->
       let r = num (snd kind) 2 in
       let g = num (snd r) 2 in
@@ -100,17 +93,14 @@ fun styleCase i =
   let subbed = num (snd ored) 2 in
   let names = str (snd subbed) in
   let want =
-    [ fst rendered,
-      fst resetText,
-      fst alternate,
-      "${fst isPlainFlag}",
-      fst debug,
-      "${fst contains}",
-      "${fst inserted} ${fst removed} ${fst ored} ${fst subbed}",
-      fst names ]
+    [
+      fst rendered, fst resetText, fst alternate, "${fst isPlainFlag}", fst debug,
+      "${fst contains}", "${fst inserted} ${fst removed} ${fst ored} ${fst subbed}", fst names
+    ]
   in
   let got =
-    [ render s,
+    [
+      render s,
       renderReset s,
       renderReset s,
       "${flag (isPlain s)}",
@@ -118,9 +108,9 @@ fun styleCase i =
       "${flag (containsEffects es os)}",
       "${bitsOf (insertEffects es os)} ${bitsOf (removeEffects es os)}"
         ++ " ${bitsOf (effectsOfStyle (addEffects os s))} ${bitsOf (effectsOfStyle (subEffects os s))}",
-      S.join "," (V.map (\e -> effectsDebug (effectSet e)) (effectsList es)) ]
-  in
-  (want, got, snd names)
+      S.join "," (V.map (\e -> effectsDebug (effectSet e)) (effectsList es))
+    ]
+  in (want, got, snd names)
 
 -- Kind 1: a palette colour as one of the sixteen.
 @cfg(test)
@@ -131,8 +121,7 @@ fun paletteCase i =
     match ansiFromIndex (fst n) with
     | Just a -> ansiIndex a
     | None -> 16
-  in
-  (["${fst expected}"], ["${got}"], snd expected)
+  in (["${fst expected}"], ["${got}"], snd expected)
 
 -- Kind 2: one of the sixteen, brightened, dimmed and on a background.
 @cfg(test)
@@ -146,18 +135,21 @@ fun ansiCase i =
   let paletteText = str (snd onDefaultText) in
   let a = ansiAt (fst k) in
   let want =
-    [ "${fst brightened} ${fst dimmed} ${fst brightFlag}",
+    [
+      "${fst brightened} ${fst dimmed} ${fst brightFlag}",
       fst onText,
       fst onDefaultText,
-      fst paletteText ]
+      fst paletteText
+    ]
   in
   let got =
-    [ "${ansiIndex (bright True a)} ${ansiIndex (bright False a)} ${flag (isBright a)}",
+    [
+      "${ansiIndex (bright True a)} ${ansiIndex (bright False a)} ${flag (isBright a)}",
       render (on (Ansi a) (Ansi (ansiAt (15 - fst k)))),
       render (onDefault (Ansi a)),
-      renderFg (Ansi256 (ansiIndex a)) ]
-  in
-  (want, got, snd paletteText)
+      renderFg (Ansi256 (ansiIndex a))
+    ]
+  in (want, got, snd paletteText)
 
 @cfg(test)
 fun runCase i =
@@ -169,11 +161,11 @@ fun runCase i =
 
 @cfg(test)
 fun check i n bad =
-  if i >= stringByteLength cases
-  then (n, bad)
+  if i >= stringByteLength cases then (n, bad)
   else
     match runCase i with
-    | (want, got, next) -> check next (n + 1) (if want == got then bad else V.pushBack bad (want, got))
+    | (want, got, next) ->
+        check next (n + 1) (if want == got then bad else V.pushBack bad (want, got))
 
 -- The number of cases, and the first few where the port differs.
 @cfg(test)

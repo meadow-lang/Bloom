@@ -8,8 +8,8 @@ use Std.Collections.Vector as V
 use Std.String as S
 
 -- One effect.
-@pub data Effect =
-  Bold
+@pub data Effect
+  = Bold
   | Dimmed
   | Italic
   | Underline
@@ -27,18 +27,11 @@ use Std.String as S
 
 -- Every effect, in the order they are written out.
 @pub def allEffects =
-  [ Effect.Bold,
-    Effect.Dimmed,
-    Effect.Italic,
-    Effect.Underline,
-    Effect.DoubleUnderline,
-    Effect.CurlyUnderline,
-    Effect.DottedUnderline,
-    Effect.DashedUnderline,
-    Effect.Blink,
-    Effect.Invert,
-    Effect.Hidden,
-    Effect.Strikethrough ]
+  [
+    Effect.Bold, Effect.Dimmed, Effect.Italic, Effect.Underline, Effect.DoubleUnderline,
+    Effect.CurlyUnderline, Effect.DottedUnderline, Effect.DashedUnderline, Effect.Blink,
+    Effect.Invert, Effect.Hidden, Effect.Strikethrough
+  ]
 
 fun effectIndex e =
   match e with
@@ -87,12 +80,9 @@ fun effectIndex e =
     | Effect.Invert -> "7"
     | Effect.Hidden -> "8"
     | Effect.Strikethrough -> "9"
-  in
-  "\u{1b}[${code}m"
+  in "\u{1b}[${code}m"
 
-fun bits es =
-  match es with
-  | Effects b -> b
+fun bits es = match es with | Effects b -> b
 
 -- No effects.
 @pub def plain = Effects 0
@@ -119,7 +109,8 @@ fun bits es =
 @pub fun removeEffects es other = Effects (bitAnd (bits es) (bitNot (bits other)))
 
 -- `es` with the effects of `other` added if `enable`, taken out if not.
-@pub fun setEffects es other enable = if enable then insertEffects es other else removeEffects es other
+@pub fun setEffects es other enable =
+  if enable then insertEffects es other else removeEffects es other
 
 -- The effects in `es`, in order.
 @pub fun effectsList es = V.filter (hasEffect es) allEffects
