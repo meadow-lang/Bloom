@@ -8,7 +8,12 @@ use Bloom.Color
 use Bloom.Effects
 
 -- How text looks. `Nothing` in a colour leaves the terminal's own.
-@pub record Style = { fg : Maybe Color, bg : Maybe Color, underline : Maybe Color, effects : Effects }
+@pub record Style = {
+  fg : Maybe Color,
+  bg : Maybe Color,
+  underline : Maybe Color,
+  effects : Effects
+}
 
 -- The plain style: no colours, no effects.
 @pub def style = Style { fg = None, bg = None, underline = None, effects = plain }
@@ -64,12 +69,11 @@ use Bloom.Effects
 -- The sequences that turn `s` on: effects, then the text, background and
 -- underline colours.
 @pub fun render (s : Style) =
-  let colour = \f m ->
-    match m with
-    | Just c -> f c
-    | None -> ""
-  in
-  renderEffects s.effects ++ colour renderFg s.fg ++ colour renderBg s.bg ++ colour renderUnderline s.underline
+  let colour = \f m -> match m with | Just c -> f c | None -> "" in
+  renderEffects s.effects
+    ++ colour renderFg s.fg
+    ++ colour renderBg s.bg
+    ++ colour renderUnderline s.underline
 
 -- The sequence that turns `s` off again: `reset`, or nothing for the plain
 -- style, which turned nothing on.

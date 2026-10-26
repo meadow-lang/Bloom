@@ -8,8 +8,8 @@ use Std.Collections.Vector as V
 
 -- The sixteen colours every terminal has.
 @derive(PartialEq)
-@pub data AnsiColor =
-  Black
+@pub data AnsiColor
+  = Black
   | Red
   | Green
   | Yellow
@@ -32,22 +32,12 @@ use Std.Collections.Vector as V
 @pub data Color = Ansi AnsiColor | Ansi256 Int | Rgb Int Int Int
 
 def ansiColors =
-  [ AnsiColor.Black,
-    AnsiColor.Red,
-    AnsiColor.Green,
-    AnsiColor.Yellow,
-    AnsiColor.Blue,
-    AnsiColor.Magenta,
-    AnsiColor.Cyan,
-    AnsiColor.White,
-    AnsiColor.BrightBlack,
-    AnsiColor.BrightRed,
-    AnsiColor.BrightGreen,
-    AnsiColor.BrightYellow,
-    AnsiColor.BrightBlue,
-    AnsiColor.BrightMagenta,
-    AnsiColor.BrightCyan,
-    AnsiColor.BrightWhite ]
+  [
+    AnsiColor.Black, AnsiColor.Red, AnsiColor.Green, AnsiColor.Yellow, AnsiColor.Blue,
+    AnsiColor.Magenta, AnsiColor.Cyan, AnsiColor.White, AnsiColor.BrightBlack, AnsiColor.BrightRed,
+    AnsiColor.BrightGreen, AnsiColor.BrightYellow, AnsiColor.BrightBlue, AnsiColor.BrightMagenta,
+    AnsiColor.BrightCyan, AnsiColor.BrightWhite
+  ]
 
 -- The colour's place in the xterm palette, 0 to 15.
 @pub fun ansiIndex c =
